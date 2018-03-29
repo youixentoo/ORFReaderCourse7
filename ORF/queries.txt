@@ -1,0 +1,15 @@
+SELECT `Bestand`.`naam` FROM Bestand
+SELECT `BLAST`.* FROM BLAST
+SELECT `Sequentie`.`Header` FROM BLAST , `Sequentie`
+
+SELECT `ORF`.`Positie`,`Sequentie`.`Header`,`Bestand`.`naam`,`BLAST`.`Accessiecode` FROM BLAST , `Bestand`
+LEFT JOIN `owe7_pg8`.`ORF` ON `BLAST`.`ORF_ORF_ID` = `ORF`.`ORF_ID` 
+LEFT JOIN `owe7_pg8`.`Sequentie` ON `ORF`.`Sequentie_Header` = `Sequentie`.`Header`
+
+per orf id alle blast resultaten.
+SELECT `ORF`.`ORF_ID`,`BLAST`.`Accessiecode`,`BLAST`.* FROM Sequentie
+LEFT JOIN `owe7_pg8`.`ORF` ON `Sequentie`.`Header` = `ORF`.`Sequentie_Header` 
+LEFT JOIN `owe7_pg8`.`BLAST` ON `ORF`.`ORF_ID` = `BLAST`.`ORF_ORF_ID`
+
+per sequentie header alle blast resultaten.
+SELECT `BLAST`.`Accessiecode`,`BLAST`.*,`Sequentie`.`Header` FROM Sequentie , `BLAST`
