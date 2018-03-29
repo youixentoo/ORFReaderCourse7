@@ -26,6 +26,6 @@ A couple of functionalities in the application weren't described in the original
   <li>The used version of MySQL Connector/J is v5 instead of the described v8</li>
   <li>The ERD is modified so the entity "ORF" has a primary key "orf_id"</li>
 </ul>
-
-<a href="https://github.com/youixentoo/ORFReaderCourse7OLD">For the old repo</a>
+<br><br>
+<a href="https://github.com/youixentoo/ORFReaderCourse7OLD">For the old repository</a>
 <br><br><br><br>Group: Thijs, Awan, Rivka
