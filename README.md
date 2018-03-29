@@ -1,7 +1,7 @@
 # ORFReaderCourse7
 
 Source needs Maven to run, otherwise just look in the pom.xml what to download and copy paste the source files to a project.
-If you only want to see the program itself, download the .jar
+If you only want to see the program itself, download the .zip
 
 # A tutorial to install Maven:
 If you use Netbeans, <a href="https://youtu.be/3ODSQ0EpoQI?list=LLIf5VI5xhBnqfYTVi7Gz2cg">this</a> is all you need for instructions as Netbeans has a Maven plug-in standard.
