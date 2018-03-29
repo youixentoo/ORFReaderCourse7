@@ -1,7 +1,8 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+Author: Thijs Weenink
+Datum: 29-3-2018
+
+
  */
 package com.course6.orf;
 
@@ -138,6 +139,7 @@ public class ORFGUI extends javax.swing.JFrame {
         stopBLASTButton = new javax.swing.JButton();
         jLabel11 = new javax.swing.JLabel();
         uselessDBButton = new javax.swing.JButton();
+        clearJListSelection = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         selectedORFField = new javax.swing.JTextArea();
@@ -547,6 +549,13 @@ public class ORFGUI extends javax.swing.JFrame {
             }
         });
 
+        clearJListSelection.setText("Clear selection");
+        clearJListSelection.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                clearJListSelectionActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -594,7 +603,10 @@ public class ORFGUI extends javax.swing.JFrame {
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(uselessDBButton)
                                     .addComponent(jLabel11)))))
-                    .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(clearJListSelection)))
                 .addContainerGap(52, Short.MAX_VALUE))
         );
 
@@ -650,7 +662,11 @@ public class ORFGUI extends javax.swing.JFrame {
                         .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 2, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 243, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 217, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 217, Short.MAX_VALUE)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(clearJListSelection)))
                 .addGap(14, 14, 14))
         );
 
@@ -855,10 +871,13 @@ public class ORFGUI extends javax.swing.JFrame {
         databaseConnection();
     }//GEN-LAST:event_uselessDBButtonActionPerformed
 
+    private void clearJListSelectionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearJListSelectionActionPerformed
+        clearJListSelection();
+    }//GEN-LAST:event_clearJListSelectionActionPerformed
+
     private void saveSettings() {
 
         // Comboboxes dont need this, this is only extra for if you dont press "enter" on the textfields
-        
         try {
             eValueCutOff = Float.valueOf(eValueCutoffTextfield.getText());
         } catch (NumberFormatException exc) {
@@ -885,7 +904,7 @@ public class ORFGUI extends javax.swing.JFrame {
     private void databaseConnection() {
         /*
         Na ongeveer 5 uur proberen om de connectie te maken heb ik er geen zin meer in
-        */
+         */
         String url = "jdbc:mysql://85.214.90.171:1521/owe7_pg8"; // Directe ip-adress van cytosine.nl
 
         new Thread() {
@@ -999,9 +1018,10 @@ public class ORFGUI extends javax.swing.JFrame {
             highlightedFrame();
         }
     }
+
     /*
     This method covers the translating from a DNA sequence to Protein, highlights all the ORF's in the sequence and saves all the found ORF's in a List
-    */
+     */
     private void highlightedFrame() {
         ProteinSequence protSeq = ReadingFileAndFrames.getReadingFrameSequence(readingFrame, sequenceString);
         proteinLength = protSeq.getLength();
@@ -1013,7 +1033,7 @@ public class ORFGUI extends javax.swing.JFrame {
     private void highlightedItemAndStats(java.awt.event.MouseEvent evt) {
         // Position of the mouse
         Point mousePoint = evt.getPoint();
-        
+
         // This is only ever useful if there is a sequence in the first place
         if (!sequenceString.isEmpty()) {
             String highlightededUnderMouse = HighlightLogics.getHighlightededUnderMouse(seqTextPane, mousePoint.x, mousePoint.y);
@@ -1021,7 +1041,7 @@ public class ORFGUI extends javax.swing.JFrame {
 
             ORFLocation location = HighlightLogics.getHighlightededItemUnderMouseInfo(seqTextPane, mousePoint.x, mousePoint.y);
             ORFInfoField.setText("Total length of genome: " + proteinLength + System.lineSeparator() + "Frame: " + readingFrame + System.lineSeparator() + "Length of ORF: " + Math.abs(location.getEnd() - location.getStart()) + System.lineSeparator() + "Start position: " + location.getStart() + System.lineSeparator() + "Stop position: " + location.getEnd());
-            
+
             // For visualisation on the second tab
             locationOnGenome(location);
             // DNA sequence of selected ORF
@@ -1099,11 +1119,11 @@ public class ORFGUI extends javax.swing.JFrame {
         );
 
 //</editor-fold>
-
     }
+
     /*
     This method creates the python script needed for performing the BLAST, runs it and processes the BLAST data
-    */
+     */
     private void BLAST() {
         if (!"".equals(selectedORFField.getText())) {
             try {
@@ -1118,24 +1138,24 @@ public class ORFGUI extends javax.swing.JFrame {
                             exucuteBLAST.setEnabled(false);
                             exucuteBLAST.setToolTipText("Currently performing a BLAST");
                             stopBLASTButton.setEnabled(true);
-                            
+
                             String sequence;
-                            
+
                             // Checks which sequence is needed to perform the selected BLAST
                             if ("blastn".equals(BLASTProgram) | "blastx".equals(BLASTProgram) | "tblastx".equals(BLASTProgram)) {
                                 sequence = selectedDNASequence;
                             } else {
                                 sequence = selectedORFField.getText();
                             }
-                            
+
                             BLASTResults = BLASTData.getBLASTResult(BLASTProgram, BLASTDatabase, sequence, String.valueOf(eValueCutOff), String.valueOf(maxListSize), BLASTMatrix, String.valueOf(maxAlignments));
 
                             BLASTMap = BLASTData.addToBLASTMap(sequence, BLASTResults, BLASTMap);
-                            
+
                             // Puts the keys from the HashMap containing all the BLAST data in a JList for the user to select a BLASt result.
                             String[] tempArray = BLASTMap.keySet().toArray(new String[BLASTMap.size()]);
                             BLASTSeqResJList.setListData(tempArray);
-                            
+
                             JOptionPane.showMessageDialog(ORFGUI.getWindows()[0], "Done with BLAST");
                             exucuteBLAST.setEnabled(true);
                             exucuteBLAST.setToolTipText("Perform a BLAST");
@@ -1162,15 +1182,16 @@ public class ORFGUI extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Please select an ORF first before attempting to BLAST");
         }
     }
+
     /*
     Shows the BLAST results of the selected ORF from the JList,
     this gets displayed in a different frame
-    */
+     */
     private void BLASTResultsList(javax.swing.event.ListSelectionEvent evt) {
         String selectedItem = BLASTSeqResJList.getSelectedValue();
         List<BLASTResult> BLASTResultsList = (List<BLASTResult>) BLASTMap.get(selectedItem);
         BLASTSeqResJList.setToolTipText(selectedItem);
-        
+
         blastResultsScreen.setText("");
         if (BLASTResultsList.isEmpty()) {
             blastResultsScreen.setText("No results available");
@@ -1218,7 +1239,7 @@ public class ORFGUI extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Please open a file first");
         } else {
             for (ORFLocation location : AllOrfLocations) {
-                String seq = sequenceString.substring(location.getStart()*3, location.getEnd()*3);
+                String seq = sequenceString.substring(location.getStart() * 3, location.getEnd() * 3);
                 System.out.println(seq);
                 AllORFsTextArea.append(seq + System.lineSeparator());
             }
@@ -1233,10 +1254,15 @@ public class ORFGUI extends javax.swing.JFrame {
         int loc = 0;
         for (ORFLocation location : AllOrfLocations) {
             String fastaH = ">Unknown ORF " + loc + " of length " + location.getLength() + " reading frame: " + readingFrame;
-            String seq = sequenceString.substring(location.getStart()*3, location.getEnd()*3);
+            String seq = sequenceString.substring(location.getStart() * 3, location.getEnd() * 3);
             AllORFsTextArea.append(fastaH + System.lineSeparator() + seq + System.lineSeparator());
             loc++;
         }
+    }
+
+    private void clearJListSelection() {
+        // Clears JList selection
+        BLASTSeqResJList.clearSelection();
     }
 
     /* ****** End of code ****** */
@@ -1288,6 +1314,7 @@ public class ORFGUI extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> blastMatrixCombo;
     private javax.swing.JComboBox<String> blastProgramCombo;
     private javax.swing.JTextArea blastResultsScreen;
+    private javax.swing.JButton clearJListSelection;
     private javax.swing.JPanel drawPanel;
     private javax.swing.JTextField eValueCutoffTextfield;
     private javax.swing.JButton exucuteBLAST;
